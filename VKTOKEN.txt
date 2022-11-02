@@ -1,2 +1,0 @@
-Access_token
-user_id
