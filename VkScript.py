@@ -1,29 +1,27 @@
 import main as repo
 import requests
-import configparser
-
-config = configparser.ConfigParser(allow_no_value=True)
-config.read("settings.ini")
+import settings
 
 
 class VkRequest:
-    def __init__(self, token_list, version='5.131'):
-        self.token = token_list[0]
-        self.id = token_list[1]
+    def __init__(self, version='5.131'):
+        self.token = settings.token
+        self.id = settings.id
         self.version = version
         self.start_params = {'access_token': self.token, 'v': self.version}
         self.json, self.export_dict = self._sort_info()
 
     def _get_photo_info(self):
         url = "https://api.vk.com/method/photos.get"
+        album_id = str(input('Введите id альбома: '))
         params = {'owner_id': self.id,
-                  'album_id': 'profile_id',
+                  'album_id': album_id,
                   'photo_sizes': 1,
                   'extended': 1,
                   'rev': 1
                   }
-        photo_info = requests.get(url, params={**self.start_params, **params}).json()
-        return photo_info
+        photo_info = requests.get(url, params={**self.start_params, **params}).json()['response']
+        return photo_info['count'], photo_info['items']
 
     def _get_logs_only(self):
         photo_count, photo_items = self._get_photo_info()
@@ -58,10 +56,3 @@ class VkRequest:
                 else:
                     sorted_dict[file_name] = picture_dict[elem][0]['url_picture']
         return json_list, sorted_dict
-
-
-if __name__ == '__main__':
-    tokenVK = config["VKTOKEN"]
-    my_VK = VkRequest(tokenVK)
-    my = my_VK._get_photo_info()
-    print(my)

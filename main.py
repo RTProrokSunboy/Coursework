@@ -1,11 +1,7 @@
 import datetime
 import json
-import configparser
 import VkScript
 import YandexScript
-
-config = configparser.ConfigParser(allow_no_value=True)
-config.read("settings.ini")
 
 
 def find_max_dpi(dict_in_search):
@@ -26,14 +22,10 @@ def time_convert(time_unix):
 
 
 if __name__ == '__main__':
-    tokenVK = config["VKTOKEN"]
-    tokenVK = [str(item) for item in tokenVK]
-    tokenYandex = config["YaTOKEN"]["OAuthtoken"]
-
-    my_VK = VkScript.VkRequest(tokenVK)
+    my_VK = VkScript.VkRequest()
 
     with open('my_VK_photo.json', 'w') as outfile:
         json.dump(my_VK.json, outfile)
 
-    my_yandex = YandexScript.Yandex('VK photo copies', tokenYandex, 5)
+    my_yandex = YandexScript.Yandex('VK photo copies', 8)
     my_yandex.create_copy(my_VK.export_dict)

@@ -1,10 +1,11 @@
 import requests
 from tqdm import tqdm
+import settings
 
 
 class Yandex:
-    def __init__(self, folder_name, token_list, num=5):
-        self.token = token_list[0]
+    def __init__(self, folder_name, num=5):
+        self.token = settings.OAuthtoken
         self.added_files_num = num
         self.url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
         self.headers = {'Authorization': self.token}
@@ -47,4 +48,3 @@ class Yandex:
 
         print(f'\nЗапрос завершен, новых файлов скопировано (по умолчанию: 5): {copy_counter}'
               f'\nВсего файлов в исходном альбоме VK: {len(dict_files)}')
-
